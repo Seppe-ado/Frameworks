@@ -101,9 +101,9 @@ namespace Frameworks.Controllers
                 try
                 {
                     _context.Update(location);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();  
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException) 
                 {
                     if (!LocationExists(location.Id))
                     {
