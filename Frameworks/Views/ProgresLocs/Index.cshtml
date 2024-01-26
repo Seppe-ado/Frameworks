@@ -12,15 +12,11 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                User Id
-            </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Completed)
-            </th>
+            
             <th>
                 Completion Date
             </th>
@@ -34,15 +30,11 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FrameworksUserId)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Completed)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.DateTime)
             </td>

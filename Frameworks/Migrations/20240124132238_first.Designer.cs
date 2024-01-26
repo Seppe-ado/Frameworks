@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Frameworks.Data.Migrations
+namespace Frameworks.Migrations
 {
     [DbContext(typeof(FrameworksContext))]
-    [Migration("20231208125728_context")]
-    partial class context
+    [Migration("20240124132238_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -147,20 +147,18 @@ namespace Frameworks.Data.Migrations
                     b.Property<DateTime>("Deleted")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FrameworksUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("FrameworksUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RouteId");
+                    b.HasIndex("FrameworksUserId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("RouteId");
 
                     b.ToTable("Progres");
                 });
@@ -186,20 +184,18 @@ namespace Frameworks.Data.Migrations
                     b.Property<DateTime>("Deleted")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FrameworksUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("FrameworksUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("LocationsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationsId");
+                    b.HasIndex("FrameworksUserId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("LocationsId");
 
                     b.ToTable("ProgresLocs");
                 });
@@ -373,15 +369,17 @@ namespace Frameworks.Data.Migrations
 
             modelBuilder.Entity("Frameworks.Models.Progres", b =>
                 {
+                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
+                        .WithMany("ProgresesUser")
+                        .HasForeignKey("FrameworksUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Frameworks.Models.Route", "Route")
                         .WithMany("ProgresesRoute")
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
-                        .WithMany("ProgresesUser")
-                        .HasForeignKey("UsersId");
 
                     b.Navigation("Route");
 
@@ -390,15 +388,17 @@ namespace Frameworks.Data.Migrations
 
             modelBuilder.Entity("Frameworks.Models.ProgresLoc", b =>
                 {
+                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
+                        .WithMany("ProgresesUserLoc")
+                        .HasForeignKey("FrameworksUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Frameworks.Models.Location", "Locations")
                         .WithMany("ProgresesLoc")
                         .HasForeignKey("LocationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
-                        .WithMany("ProgresesUserLoc")
-                        .HasForeignKey("UsersId");
 
                     b.Navigation("Locations");
 

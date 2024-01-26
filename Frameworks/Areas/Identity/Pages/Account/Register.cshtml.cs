@@ -75,6 +75,18 @@ namespace Frameworks.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+             [Required]
+            [StringLength(maximumLength: 25, MinimumLength = 5)]
+            [Display(Name = "Username")]
+            public string UserName { get; set; }
+
+            [Required]
+            [Display(Name = "Firstname")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Lastname")]
+            public string LastName { get; set; }
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -114,8 +126,11 @@ namespace Frameworks.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                user.FirstName = Input.FirstName; 
+                user.LastName = Input.LastName;
+                user.EmailConfirmed = true;
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -124,6 +139,8 @@ namespace Frameworks.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
+                    await _userManager.AddToRoleAsync(user, "USER");
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

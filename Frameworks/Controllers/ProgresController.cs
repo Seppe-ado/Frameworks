@@ -7,22 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Frameworks.Data;
 using Frameworks.Models;
+using Microsoft.AspNetCore.Authorization;
+using Frameworks.Areas.Identity.Data;
 
 namespace Frameworks.Controllers
 {
+    [Authorize]
     public class ProgresController : Controller
     {
         private readonly FrameworksContext _context;
+        readonly IHttpContextAccessor _contextAccessor;
+        
 
-        public ProgresController(FrameworksContext context)
+        public ProgresController(FrameworksContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _contextAccessor = httpContextAccessor;
         }
 
         // GET: Progres
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Progres.Where(p =>p .Deleted > DateTime.Now).Include(p => p.Route);
+
+            string name = _contextAccessor.HttpContext.User.Identity.Name;
+           FrameworksUser user= _context.Users.First(u => u.UserName == name);
+            var applicationDbContext = _context.Progres.Where(p =>p .Deleted > DateTime.Now).Where(p=>p .FrameworksUserId == user.Id ).Include(p => p.Route);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -61,8 +70,11 @@ namespace Frameworks.Controllers
         {
             //if (ModelState.IsValid)
             //{
-                progres.Completed = true;
+            string name = _contextAccessor.HttpContext.User.Identity.Name;
+            FrameworksUser user = _context.Users.First(u => u.UserName == name);
+            progres.Completed = true;
                 progres.DateTime = DateTime.Now;
+            progres.FrameworksUserId = user.Id;
                 _context.Add(progres);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

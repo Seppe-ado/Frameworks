@@ -7,22 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Frameworks.Data;
 using Frameworks.Models;
+using Microsoft.AspNetCore.Authorization;
+using Frameworks.Areas.Identity.Data;
 
 namespace Frameworks.Controllers
 {
+    [Authorize]
     public class ProgresLocsController : Controller
     {
         private readonly FrameworksContext _context;
+        readonly IHttpContextAccessor _contextAccessor;
 
-        public ProgresLocsController(FrameworksContext context)
+        public ProgresLocsController(FrameworksContext context, IHttpContextAccessor contextAccessor)
         {
             _context = context;
+            _contextAccessor = contextAccessor;
         }
 
         // GET: ProgresLocs
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ProgresLocs.Where(p => p.Deleted > DateTime.Now).Include(p => p.Locations);
+            string name = _contextAccessor.HttpContext.User.Identity.Name;
+            FrameworksUser user = _context.Users.First(u => u.UserName == name);
+            var applicationDbContext = _context.ProgresLocs.Where(p => p.Deleted > DateTime.Now).Where(p=>p.FrameworksUserId == user.Id).Include(p => p.Locations);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -61,7 +68,10 @@ namespace Frameworks.Controllers
         {
             // if (ModelState.IsValid)
             // {
-                progresLoc.Completed = true;
+            string name = _contextAccessor.HttpContext.User.Identity.Name;
+            FrameworksUser user = _context.Users.First(u => u.UserName == name);
+            progresLoc.FrameworksUserId = user.Id;
+            progresLoc.Completed = true;
                 progresLoc.DateTime = DateTime.Now;
                 _context.Add(progresLoc);
                 await _context.SaveChangesAsync();

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Frameworks.Data;
 using Frameworks.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Frameworks.Controllers
 {
+    [Authorize]
     public class RoutesController : Controller
     {
         private readonly FrameworksContext _context;
@@ -18,7 +20,7 @@ namespace Frameworks.Controllers
         {
             _context = context;
         }
-
+        [AllowAnonymous]
         // GET: Routes
         public async Task<IActionResult> Index()
         {

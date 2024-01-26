@@ -20,6 +20,17 @@ namespace Frameworks.Controllers
 
         public IActionResult Privacy()
         {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("https://restcountries.com/v3.1/name/belgium");
+            client.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json") );
+            var returned = client.GetAsync(client.BaseAddress).Result;
+            if ( returned.IsSuccessStatusCode )
+            {
+                var data = returned.Content.ReadAsStringAsync().Result;
+                
+                return View(data);
+            }
             return View();
         }
 

@@ -4,19 +4,16 @@ using Frameworks.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Frameworks.Data.Migrations
+namespace Frameworks.Migrations
 {
     [DbContext(typeof(FrameworksContext))]
-    [Migration("20231208130113_context2")]
-    partial class context2
+    partial class FrameworksContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,20 +144,18 @@ namespace Frameworks.Data.Migrations
                     b.Property<DateTime>("Deleted")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FrameworksUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("FrameworksUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RouteId");
+                    b.HasIndex("FrameworksUserId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("RouteId");
 
                     b.ToTable("Progres");
                 });
@@ -186,20 +181,18 @@ namespace Frameworks.Data.Migrations
                     b.Property<DateTime>("Deleted")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FrameworksUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("FrameworksUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("LocationsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationsId");
+                    b.HasIndex("FrameworksUserId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("LocationsId");
 
                     b.ToTable("ProgresLocs");
                 });
@@ -373,15 +366,17 @@ namespace Frameworks.Data.Migrations
 
             modelBuilder.Entity("Frameworks.Models.Progres", b =>
                 {
+                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
+                        .WithMany("ProgresesUser")
+                        .HasForeignKey("FrameworksUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Frameworks.Models.Route", "Route")
                         .WithMany("ProgresesRoute")
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
-                        .WithMany("ProgresesUser")
-                        .HasForeignKey("UsersId");
 
                     b.Navigation("Route");
 
@@ -390,15 +385,17 @@ namespace Frameworks.Data.Migrations
 
             modelBuilder.Entity("Frameworks.Models.ProgresLoc", b =>
                 {
+                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
+                        .WithMany("ProgresesUserLoc")
+                        .HasForeignKey("FrameworksUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Frameworks.Models.Location", "Locations")
                         .WithMany("ProgresesLoc")
                         .HasForeignKey("LocationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Frameworks.Areas.Identity.Data.FrameworksUser", "Users")
-                        .WithMany("ProgresesUserLoc")
-                        .HasForeignKey("UsersId");
 
                     b.Navigation("Locations");
 

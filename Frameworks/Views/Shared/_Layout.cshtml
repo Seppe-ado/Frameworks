@@ -1,4 +1,7 @@
 ﻿<!DOCTYPE html>
+@{
+   int number = 0;
+}
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,15 +31,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Routes" asp-action="Index">Routes</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ProgresLocs" asp-action="Index">Visited Locations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Progres" asp-action="Index">Completed Routes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ProgresLocs" asp-action="Index">Visited Locations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Progres" asp-action="Index">Completed Routes</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("SystemAdministrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -51,7 +60,11 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Frameworks - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            @if (!string.IsNullOrEmpty(User.Identity.Name))
+            {
+                 number = Frameworks.Services.Stats.GetNumberRequests(User.Identity.Name);
+            }
+            &copy; 2023 - Frameworks - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy @number</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
