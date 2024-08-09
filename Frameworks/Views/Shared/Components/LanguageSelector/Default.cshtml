@@ -1,0 +1,24 @@
+﻿<!-- Default.cshtml -->
+<div class="language-selector" style="display:flex">
+    @{
+        var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    }
+
+    <form asp-controller="Home" asp-action="SetCulture" method="post" style="margin:5px;background-color:white;border:2px solid gray">
+        <input type="hidden" name="culture" value="en-US" />
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <button type="submit">English</button>
+    </form>
+
+    <form asp-controller="Home" asp-action="SetCulture" method="post" style="margin:5px;background-color:white;border:2px solid gray">
+        <input type="hidden" name="culture" value="fr-FR" />
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <button type="submit">Français</button>
+    </form>
+
+    <form asp-controller="Home" asp-action="SetCulture" method="post" style="margin:5px;background-color:white;border:2px solid gray">
+        <input type="hidden" name="culture" value="nl-BE" />
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+        <button type="submit">Nederlands</button>
+    </form>
+</div>

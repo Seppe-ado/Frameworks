@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>@Localizer["Edit"]</h1>
 
-<h4>Route</h4>
+<h4>@Localizer["Route"]</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,35 +15,35 @@
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Deleted" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">@Localizer["Name"]</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
+                <label asp-for="Description" class="control-label">@Localizer["Description"]</label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Length" class="control-label"></label>
+                <label asp-for="Length" class="control-label">@Localizer["Length"]</label>
                 <input asp-for="Length" class="form-control" />
                 <span asp-validation-for="Length" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Duration" class="control-label"></label>
+                <label asp-for="Duration" class="control-label">@Localizer["Duration"]</label>
                 <input asp-for="Duration" class="form-control" />
                 <span asp-validation-for="Duration" class="text-danger"></span>
             </div>
             
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="@Localizer["Save"]" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">@Localizer["Back to List"]</a>
 </div>
 
 @section Scripts {

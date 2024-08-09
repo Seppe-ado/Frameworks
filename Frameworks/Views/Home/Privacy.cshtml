@@ -1,11 +1,37 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-@model string
-@{
-    string data = Model;
-}
+@model IEnumerable<Frameworks.Models.MyRoles>
 <h1>@ViewData["Title"]</h1>
 
-<p id="Info">Use this page to detail your site's privacy policy.</p>
-<p> @data</p>
+<h1>Manage Users</h1>
+table class="table">
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Username)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Roles)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+@foreach (var item in Model) {
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Username)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Roles)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Username">Change Role</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+

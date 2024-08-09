@@ -3,8 +3,10 @@ using Frameworks.Data;
 using Frameworks.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +39,26 @@ builder.Services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
 
+var supportedCultures = new[]
+{
+                new CultureInfo("en-US"),
+                new CultureInfo("fr-FR"),
+                new CultureInfo("nl-BE")
+                
+            };
+
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    //options.DefaultRequestCulture = new RequestCulture("en-US");
+    //options.DefaultRequestCulture = new RequestCulture("nl-BE");
+    options.DefaultRequestCulture = new RequestCulture("fr-FR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+
+
+
 
 
 builder.Services.AddTransient<IMyUser, MyUser>();
@@ -60,7 +82,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseRequestLocalization();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -72,11 +94,7 @@ using (var scope = app.Services.CreateScope())
     await FrameworksContext.DataInitializer(context,userManager);
 }
 
-var supportedCultures = new[] { "en-US", "fr", "nl" };
-var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-app.UseRequestLocalization(localizationOptions);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
